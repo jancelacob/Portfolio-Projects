@@ -1,3 +1,45 @@
+--Queries for Data visualisation with Tableau. Each query is exported to an excel file and then imported into tableau
+
+-- 1. 
+
+Select SUM(cast(new_cases as float)) as total_cases, SUM(cast(new_deaths as float)) as total_deaths, SUM(cast(new_deaths as float))/SUM(cast(new_cases as float))*100 as DeathPercentage
+From PortfolioProject..CovidDeaths
+--Where location like '%states%'
+where continent is not null 
+--Group By date
+order by 1,2
+
+--2.
+
+Select location, SUM(cast(new_deaths as int)) as TotalDeathCount
+From PortfolioProject..CovidDeaths
+--Where location like '%states%'
+Where continent = ' '
+and location not in ('World', 'European Union', 'International')
+Group by location
+order by TotalDeathCount desc
+
+-- 3.
+
+Select Location, Population, MAX(total_cases) as HighestInfectionCount,  Max( (cast(total_cases as float) / (nullif(cast(population as float), 0))) * 100 ) as PercentPopulationInfected
+From PortfolioProject..CovidDeaths
+--Where location like '%states%'
+Group by Location, Population
+order by PercentPopulationInfected desc
+
+
+-- 4.
+
+
+Select Location, Population,date, MAX(total_cases) as HighestInfectionCount,  Max((cast(total_cases as float)/nullif(cast(population as float),0)))*100 as PercentPopulationInfected
+From PortfolioProject..CovidDeaths
+--Where location like '%states%'
+Group by Location, Population, date
+order by PercentPopulationInfected desc
+
+
+--Queries for Data Exploration
+
 Select *
 From PortfolioProject..CovidDeaths
 where continent is not null
